@@ -13,7 +13,7 @@ def generate_students(filename='new_students.xlsx', students_number=99, male_pro
     ws = wb.active
 
     # Set the column headers
-    ws.append(['ID', 'FirstName', 'MidleName', 'FamilyName', 'Gender', 'WithID', 'OldSchool', 'OldSchoolClass', 'G1', 'G2', 'G3', 'G4', 'G5', 'MeanValue', 'SpecialNeeds', 'Notes'])
+    ws.append(['ID', 'FirstName', 'MiddleName', 'FamilyName', 'Gender', 'WithID', 'OldSchool', 'OldSchoolClass', 'G1', 'G2', 'G3', 'G4', 'G5', 'MeanValue', 'SpecialNeeds', 'Notes'])
 
     # Set up the mock data
     greek_first_names = ['Αλέξανδρος', 'Δημήτρης', 'Γιώργος', 'Κωνσταντίνος', 'Ανδρέας', 'Νικόλαος', 'Παναγιώτης', 'Σταύρος', 'Βασίλης', 'Μιχάλης']

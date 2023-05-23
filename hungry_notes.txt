@@ -1,0 +1,150 @@
+In testing environmet we :
+1. Run the new_students.py.
+2. Then we run islands.py and if there is any message we go back from the step 1.
+3.Then we run hungry_algorithm.py
+
+In the real environment we:
+1. Run valitity_of_new_students.py
+2. We will run a clustering program to convert characteristics to numbers
+3. We run hungry_algorithm.py
+
+For the above we have some settings
+
+classrooms = 4
+characteristics = 4  and we want to see how to change this with a variable
+
+We have numbered groups of students with a given set of characteristics
+Numbered students belongs to numbered groups.
+Numbered groups of students will be placed in classrooms, based on an algorithm.
+
+We have numbered groups of numbered students with variable number of students (1 or more).
+We have a give number of classrooms that can accept numbered groupd of people.
+The classrooms belong to a shcool.
+We have an algorithm that puts the numbered groups in clasrooms with somehow a random way
+Each time the algorith finished we count the cost of the solution
+We do this for some thousnads times and we select the solution with the minimum cost.
+
+When we have the solution, which is the placement of each group of students in the
+classrooms, we must be able to show the students and their classrooms and the
+classrooms with their student.
+
+class Student:
+    def __init__(self, number, characteristics):
+        self.number = number
+        self.characteristics = characteristics
+        self.group = None  # Initialize group as None
+
+    def assign_group(self, group):
+        self.group = group
+
+class Group:
+    def __init__(self, number, students, characteristics):
+        self.number = number
+        self.students = students
+        self.characteristics = characteristics
+        self.classroom = None  # Initialize classroom as None
+
+    def assign_classroom(self, classroom):
+        self.classroom = classroom
+
+class Classroom:
+    def __init__(self, number, groups):
+        self.number = number
+        self.groups = groups
+
+class School:
+    def __init__(self, classrooms):
+        self.classrooms = classrooms
+
+    def placement_algorithm(self):
+        # Implement the algorithm to assign groups to classrooms based on criteria
+        # Assign groups to classrooms and students to groups
+
+    def calculate_cost(self):
+        # Calculate the cost of the solution
+
+    def display_solution(self):
+        # Display the students and their assigned classrooms
+        # Display the classrooms with their assigned students
+
+# Create student objects
+student1 = Student(1, characteristics={'name': 'John', 'age': 16, 'grade': 10})
+student2 = Student(2, characteristics={'name': 'Emily', 'age': 15, 'grade': 9})
+# ... create more students
+
+# Create group objects
+group1 = Group(1, students=[student1, student2], characteristics={'average_grade': 9.5})
+group2 = Group(2, students=[student3, student4, student5], characteristics={'average_grade': 8.7})
+# ... create more groups
+
+# Create classroom objects
+classroom1 = Classroom(1, groups=[])
+classroom2 = Classroom(2, groups=[])
+# ... create more classrooms
+
+# Assign students to groups
+student1.assign_group(group1)
+student2.assign_group(group1)
+# ... assign more students to groups
+
+# Assign groups to classrooms
+group1.assign_classroom(classroom1)
+group2.assign_classroom(classroom2)
+# ... assign more groups to classrooms
+
+# Create school object
+school = School(classrooms=[classroom1, classroom2])
+
+# Run placement algorithm
+school.placement_algorithm()
+
+# Calculate cost
+cost = school.calculate_cost()
+
+# Display solution
+school.display_solution()
+
+
+=======================================
+
+islands.py
+
+find the couples 
+find the groups and don't inform students about their group.
+
+enumarate the groups
+find group characteristics based on the students they have
+
+===================================
+hungry_algorithm.py
+
+sum characteristics of groups to find the school characteristics
+
+create a given number of classrooms with given characteristics
+
+place_group_in_classroom:  
+    add to characteristics of classroom
+    Don't add the group to classroom
+
+run a placement_of_groups_in_classrooms:
+    for each group decide where to put it according to algorithm
+        for each classroom
+            - find the addition of the characteristics and multiply them 
+            with a random coefient of 0.85
+            - Add the results for each classroom  
+        Find which classroom has the min and it is hungry
+        and place_group_in_classroom(the classroom we choose)
+
+
+previous_solution_cost = 1000000000
+iterations = 20000
+
+for each iteration
+    we  clean the classrooms
+    placement_of_groups_in_classrooms( according to algorith with randomness)
+    find the variances of males, females, needsfemales etc...
+    solution_cost = variance of males/males + variance of females/females etc ...
+    keep the min and keep copy classrooms_content and best_classrooms_list
+print min cost
+print best_classroms_contents and best_classroom_list
+Show the results

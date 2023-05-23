@@ -1,3 +1,37 @@
+
+
+
+import random
+import numpy as np
+import pandas as pd
+
+
+# we have groups of students with the same characteristics as one classroom.
+# each group has 3 counters: the number of students, special needs and the sum of the grade of each student. 
+# The special needs in an integer number which is equal or less than the number of students in the group.
+# the number os special needs is a random number between 0 and the number of students in the group and only 20% of the groups have special needs.
+# the sum of the grade of each student is a random number between 0 and 10.
+# the number of groups is a given number.
+# the number of students in each group is a random number between 0 and 3.
+
+
+filepath = "StGrs.xlsx"
+df1 = pd.read_excel(filepath, sheet_name='Groups')
+new_header = ['males','females','specialneeds','ggrade']
+df1.columns = new_header
+
+males = 0
+females = 0
+special_needs=0
+sum_of_grades=0
+
+
+groups_list = []
+
+for idx1, kk in df1.iterrows():
+    groups_list.append([idx1,int(kk[0]),int(kk[1]),int(kk[2]),kk[3]])
+
+# ===============================================
 groups = len(groups_list)
 
 for i in range(groups):
@@ -192,5 +226,11 @@ pass
 print()
 print("Minimum Solution Cost", previous_solution_cost, "was found at iteration", min_iteration, "out of", iterations, "iterations")
 print()
+
+
+
+pass
+
+
 
 
