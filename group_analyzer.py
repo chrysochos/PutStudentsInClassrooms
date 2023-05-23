@@ -1,6 +1,5 @@
 from collections import defaultdict
 from student_file_reader import StudentFileReader
-from student import Student
 from group import Group
 
 class GroupAnalyzer:

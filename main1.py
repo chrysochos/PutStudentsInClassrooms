@@ -1,7 +1,3 @@
-import os
-import pandas as pd 
-import math
-from student import Student
 
 from collections import defaultdict
 # Import the StudentFileReader class from the student_file_reader module
@@ -17,7 +13,7 @@ class Main1:
         # Process each student object
 
         if student.with_id.is_integer():
-            print(f"Student ID: {student.student_id}, with_id: {student.with_id}")
+            # print(f"Student ID: {student.student_id}, with_id: {student.with_id}")
             couples[student.student_id] = [int(student.with_id)]
         else:
             couples[student.student_id]= []
@@ -65,33 +61,5 @@ class Main1:
         print("ERROR: Student not found")
         return None
 
-    # def something_else():
-    #     groups_list = []
-    #     for idx1, group1 in enumerate(groups):
-    #         print("group has:", group1)
-    #         length = len(group1)
-    #         if length > 5:  # external setting
-    #             print('group=', i, ' is too big')
-    #             exit()
-    #         gm = 0
-    #         gf = 0
-    #         gsn = 0
-    #         ggrade = 0 
-    #         for i, stud in enumerate(group1):
-    #             student=find_student_by_id(students, stud)                
-    #             if student.gender == 'M' or student.gender =='m':
-    #                 gm += 1
-    #             else:
-    #                 gf += 1
-    #             if student.special_needs == 1:
-    #                 gsn += 1
-    #             ggrade += student.mean_value
-                
-    #         ggrade = ggrade / length
-    #         ggrade = ggrade / 10
-    #         #print('group=', id, ' Male=',gm,' Female=',gf, ' SpecialNeeds=',gsn, ' Group Grade=',ggrade)
-    #         #print(id, gm, gf, gsn, "{:.2f}".format(ggrade))
-
-    #         groups_list.append([idx1,int(gm),int(gf),int(gsn),ggrade])
-
+ 
     pass

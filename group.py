@@ -29,6 +29,11 @@ class Group():
         self.ggrade = self.ggrade / 10
         return None
  
+    def get_group_values(self):
+        """_summary_line
+        Returns: the values of the group         
+        """        
+        return [self.gm, self.gf, self.gsn, round(self.ggrade,2)]
 
     def get_group(self):
         return self.group

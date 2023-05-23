@@ -5,10 +5,18 @@ from collections import defaultdict
 from student_file_reader import StudentFileReader
 from student import Student
 from group_analyzer import GroupAnalyzer
+from save_to_excel import SaveToExcel
 
 
 class ClassroomsGroupAnalyzer:
-    def __init__(self, file_path, groups_list,students):
+    def __init__(self, file_path, groups_list,students,classrooms):
+        """_summary_line
+        Args:
+            file_path (str): path to the file
+            groups_list (list): list of groups
+            students (list): list of students
+            
+        """ 
         self.students = students
         self.file_path = file_path
         # self.student_generator = StudentFileReader(self.file_path)
@@ -18,12 +26,19 @@ class ClassroomsGroupAnalyzer:
         self.females = 0
         self.special_needs = 0
         self.sum_of_grades = 0
-        self.classrooms = 4
+        self.classrooms = classrooms
         self.classrooms_list = []
         self.classrooms_content = []
         self.previous_solution_cost = 1000000000
 
     def analyze_groups(self,groups_list):
+        """
+        _summary_line
+        Args:
+            groups_list (list): list of groups
+        Returns:
+            None      
+        """        
         # groups = len(groups_list)
         males = 0
         females = 0
@@ -38,13 +53,13 @@ class ClassroomsGroupAnalyzer:
         print("Number of males:", males)
         print("Number of females:", females)
         print("Number of special_needs:", special_needs)
-        print("Sum of grades:", sum_of_grades)
+        print("Sum of grades:", round(sum_of_grades,2))
         print()
 
     def create_classrooms(self):
         self.classrooms_list.clear()
-        for i in range(self.classrooms):
-            self.classrooms_list.append([i, 0, 0, 0, 0])
+        for classroom in range(self.classrooms):
+            self.classrooms_list.append([classroom, 0, 0, 0, 0])
         return self.classrooms_list
 
     def place_group_in_classroom(self, group, classroom):
@@ -105,49 +120,29 @@ class ClassroomsGroupAnalyzer:
             classroom = item[0]
             group = item[1]
             group.assign_group_to_classroom(classroom)
-            print("Classroom", classroom, "Group", group.group_id)
+            # print("Classroom", classroom, "Group", group.group_id)
         # print(groups_by_classroom)
         return None
     
     def find_students_by_group_by_classroom(self):
         for student in self.students:
-            print(student.student_id, student.group.group_id, student.group.classroom, student.group.group) 
+            pass
+            print("Student no. ",student.student_id, " in classroom " ,student.group.classroom, " in group ", student.group.group_id, student.group.get_group_values(), student.group.group) 
         return None
     
 
 
-        # df = pd.read_excel(file_path, sheet_name=sheet_name)
-
-        # list_of_groups_to_classrooms = []
-        # output_dict = {}
-        # sorted_keys = sorted(groups_by_classroom.keys())
-        # for key in sorted_keys:
-        #     print(key, groups_by_classroom[key])
-        #     for element in groups_by_classroom[key]:
-        #         if element not in output_dict:
-        #             output_dict[element] = []
-        #         output_dict[element].append(key)
-
-        # for key in sorted(output_dict.keys()):
-        #     list_of_groups_to_classrooms.append(output_dict[key])
-        #     for index, row in df.iterrows():
-        #         if str(row['GroupN']).strip() == 'Group_' + str(key):
-        #             df.at[index, 'Classroom'] = output_dict[key]
-
-        # df.to_excel('final.xlsx', index=False)
-
-        # print()
-        # print("Best classrooms list")
-        # for element in best_classrooms_list:
-        #     print(element)
-        # print()
-        # print("Minimum Solution Cost", self.previous_solution_cost, "was found at iteration", min_iteration, "out of", iterations, "iterations")
-        # print()
 
 def main():
+    """
+    This is the  main entry point of the program. 
+    Here we must initialize and create the main objects
+    and give the results of the program to screen and excel file.
+    """    
     # Usage example
     iterations = 2000
     file_path = 'new_students.xlsx'
+    output_file_path = 'new_students_output.xlsx'
     sheet_name = 'Students'
     classrooms = 4
     student_generator = StudentFileReader(file_path)
@@ -155,22 +150,19 @@ def main():
     group_analyzer = GroupAnalyzer(students,file_path)
     group_analyzer.process_students_to_couples()
     groups_list = group_analyzer.find_groups()
-    for group in groups_list:
-        group.print_group() 
+    # for group in groups_list:
+    #     group.print_group() 
 
 
-    classrooms_group_analyzer = ClassroomsGroupAnalyzer(file_path, groups_list,students)
+    classrooms_group_analyzer = ClassroomsGroupAnalyzer(file_path, groups_list,students,classrooms)
     classrooms_group_analyzer.analyze_groups(groups_list)
     classrooms_group_analyzer.create_classrooms()
-    # classrooms_group_analyzer.placement_of_groups_in_classrooms()
     classrooms_group_analyzer.optimize_classroom_placement(iterations=iterations, file_path=file_path, sheet_name=sheet_name)
-    # classrooms_group_analyzer.print_classrooms(iterations=iterations, file_path=file_path, sheet_name=sheet_name)
     classrooms_group_analyzer.find_groups_by_classroom(iterations=iterations)
-    # print(groups_by_classroom)
-    students_by_group_by_classroom = classrooms_group_analyzer.find_students_by_group_by_classroom()
-    # print(students_by_group_by_classroom)
-    # print(classrooms_group_analyzer.best_classrooms_list)
-    # print(classrooms_group_analyzer.best_classrooms_content)
+ 
+    save_to_excel = SaveToExcel(file_path, output_file_path, students)
+    save_to_excel.save_to_excel()
+
     classr = {}
     for classroom in range(classrooms):
         classr[classroom] = []
@@ -186,13 +178,9 @@ def main():
                 classr_s +=group.gsn
                 classr_g +=group.ggrade
         # print(classroom, classr[classroom])
-        print(classroom, classr_m, classr_f, classr_s, classr_g)
+        print(classroom, classr_m, classr_f, classr_s, round(classr_g,2))
 
-
-    # print(classrooms_group_analyzer.classrooms_list)
-    # print(classrooms_group_analyzer.classrooms_content)
-    # print(classrooms_group_analyzer.previous_solution_cost)
-    # print(classrooms_group_analyzer.min_iteration)
+    print("The results are saved in the file", output_file_path)
     pass
   
    
