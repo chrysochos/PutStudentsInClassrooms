@@ -90,17 +90,20 @@ class ClassroomsGroupAnalyzer:
             else:
                 print("The group", i, "was not placed in any classroom")
 
-    def optimize_classroom_placement(self, iterations, file_path,sheet_name):
+    def optimize_classroom_placement(self, iterations):
         for j in range(iterations):
             self.classrooms_content.clear()
             self.create_classrooms()
 
             self.placement_of_groups_in_classrooms()
 
-            np_array = np.array(self.classrooms_list)
-            variances = np.var(np_array, axis=0)
+            np_array = np.array([sublist[1:] for sublist in self.classrooms_list])
+            # variances = np.var(np_array, axis=0)
+            mean = np.mean(np_array, axis=0)
+            coefficient_of_variation = np.std(np_array, axis=0) / mean
             # solution_cost = variances[1] / (self.males +0.000000001) + variances[2] / (self.females +0.000000001) + variances[3] / (self.special_needs +0.000000001) + variances[4] / (self.sum_of_grades +0.000000001)
-            solution_cost = variances[1] + variances[2] + variances[3] + variances[4]
+            # solution_cost = variances[1] + variances[2] + variances[3] + variances[4]
+            solution_cost = np.sum(coefficient_of_variation)
 
             if solution_cost < self.previous_solution_cost:
                 self.previous_solution_cost = solution_cost
@@ -156,7 +159,7 @@ def main():
     classrooms_group_analyzer = ClassroomsGroupAnalyzer(file_path, groups_list,students,classrooms)
     classrooms_group_analyzer.analyze_groups(groups_list)
     classrooms_group_analyzer.create_classrooms()
-    classrooms_group_analyzer.optimize_classroom_placement(iterations=iterations, file_path=file_path, sheet_name=sheet_name)
+    classrooms_group_analyzer.optimize_classroom_placement(iterations=iterations)
     classrooms_group_analyzer.find_groups_by_classroom(iterations=iterations)
  
     save_to_excel = SaveToExcel(file_path, output_sheet_name, students)

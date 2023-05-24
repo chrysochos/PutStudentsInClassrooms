@@ -2,7 +2,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cluster import AgglomerativeClustering
 from fuzzywuzzy import fuzz
-from itertools import combinations
+# from itertools import combinations
+from excel_utils import write_sheet_to_excel
 
 class Clustering:
     def __init__(self, input_file_path, starting_sheet_name, output_sheet_name):
@@ -56,7 +57,10 @@ class Clustering:
         df['ClassClusterFuzzy'] = class_labels_fuzzy
         df['SchoolClusterFuzzy'] = school_labels_fuzzy
 
+
+
         # save output to excel
         # Write the new sheet to the Excel file
-        with pd.ExcelWriter(self.input_file_path, engine='openpyxl', mode='a') as writer:
-            df.to_excel(writer, sheet_name=self.output_sheet_name, index=False)
+        # with pd.ExcelWriter(self.input_file_path, engine='openpyxl', mode='a') as writer:
+        #     df.to_excel(writer, sheet_name=self.output_sheet_name, index=False)
+        write_sheet_to_excel(df, sheet_name= self.output_sheet_name, input_file_path= self.input_file_path)
