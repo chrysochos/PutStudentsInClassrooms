@@ -2,12 +2,13 @@ import pandas as pd
 from student import Student
 
 class StudentFileReader():
-    def __init__(self, file_path):
+    def __init__(self, file_path,sheet_name):
         self.file_path = file_path
+        self.sheet_name = sheet_name
 
     def generate_students(self):
         # Read the Excel file
-        df = pd.read_excel(self.file_path)
+        df = pd.read_excel(self.file_path, sheet_name =self.sheet_name)
 
         # Iterate over the rows and generate student objects
         for _, row in df.iterrows():

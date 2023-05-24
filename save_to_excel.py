@@ -1,9 +1,9 @@
 import pandas as pd
 
 class SaveToExcel:
-    def __init__(self, input_file_path, output_file_path, students):
+    def __init__(self, input_file_path, output_sheet_name, students):
         self.input_file_path = input_file_path
-        self.output_file_path = output_file_path
+        self.output_sheet_name = output_sheet_name
         self.students = students
 
     def save_to_excel(self):
@@ -14,7 +14,11 @@ class SaveToExcel:
             df.loc[row_index, 'GroupID'] = student.group.group_id
             df.loc[row_index, 'GroupValues'] = str(student.group.get_group_values())
             df.loc[row_index, 'Group'] = str(student.group.group)
-        df.to_excel(self.output_file_path, index=False)
+        # df.to_excel(self.input_file_path, sheet_name=self.output_sheet_name, index=False)
+
+        # Write the new sheet to the Excel file
+        with pd.ExcelWriter(self.input_file_path, engine='openpyxl', mode='a') as writer:
+            df.to_excel(writer, sheet_name=self.output_sheet_name, index=False)
 
 def main():
     """

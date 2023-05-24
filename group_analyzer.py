@@ -39,7 +39,7 @@ class GroupAnalyzer:
                         stack.extend(graph[vertex])
                 # groups.append(island)
                 # create a group object
-                group = Group()
+                group = Group(self.students)
                 group.add_group(i, island,students=self.students)
                 for student1 in island:
                     for student in self.students:
@@ -57,41 +57,7 @@ class GroupAnalyzer:
         print("ERROR: Student not found")
         return None
 
-    # def analyze_groups(self):
-    #     groups = self.find_groups()
-    #     groups_list = []
-    #     for idx1, group1 in enumerate(groups):
-    #         # print("group has:", group1)
-    #         length = len(group1)
-    #         if length > 5:
-    #             print('group=', idx1, ' is too big')
-    #             exit()
-    #         gm = 0
-    #         gf = 0
-    #         gsn = 0
-    #         ggrade = 0
-    #         for i, stud in enumerate(group1):
-    #             student = self.find_student_by_id(stud)
-    #             if student.gender == 'M' or student.gender == 'm':
-    #                 gm += 1
-    #             else:
-    #                 gf += 1
-    #             if student.special_needs == 1:
-    #                 gsn += 1
-    #             ggrade += student.mean_value
 
-    #         ggrade = ggrade / length
-    #         ggrade = ggrade / 10
-
-    #         # create a group object
-    #         # group = Group()
-    #         # group.add_group(idx1, group1)
-    #         # groups_list.append(group)
-
-            
-    #         groups_list.append([idx1, int(gm), int(gf), int(gsn), ggrade])
-
-    #     return groups_list
 
 def main():
     # Usage example

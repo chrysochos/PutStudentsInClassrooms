@@ -1,9 +1,6 @@
 import random
 import numpy as np
-import pandas as pd
-from collections import defaultdict
 from student_file_reader import StudentFileReader
-from student import Student
 from group_analyzer import GroupAnalyzer
 from save_to_excel import SaveToExcel
 
@@ -142,10 +139,10 @@ def main():
     # Usage example
     iterations = 2000
     file_path = 'new_students.xlsx'
-    output_file_path = 'new_students_output.xlsx'
+    output_sheet_name = 'Results'
     sheet_name = 'Students'
     classrooms = 4
-    student_generator = StudentFileReader(file_path)
+    student_generator = StudentFileReader(file_path, sheet_name=sheet_name)
     students = list(student_generator.generate_students())
     group_analyzer = GroupAnalyzer(students,file_path)
     group_analyzer.process_students_to_couples()
@@ -160,7 +157,7 @@ def main():
     classrooms_group_analyzer.optimize_classroom_placement(iterations=iterations, file_path=file_path, sheet_name=sheet_name)
     classrooms_group_analyzer.find_groups_by_classroom(iterations=iterations)
  
-    save_to_excel = SaveToExcel(file_path, output_file_path, students)
+    save_to_excel = SaveToExcel(file_path, output_sheet_name, students)
     save_to_excel.save_to_excel()
 
     classr = {}
@@ -180,7 +177,7 @@ def main():
         # print(classroom, classr[classroom])
         print(classroom, classr_m, classr_f, classr_s, round(classr_g,2))
 
-    print("The results are saved in the file", output_file_path)
+    # print("The results are saved in the file", output_file_path)
     pass
   
    

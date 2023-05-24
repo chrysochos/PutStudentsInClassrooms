@@ -1,0 +1,40 @@
+The python program student_file_creator.py is needed only for testing perposes. BECAREFUL if you run the program, your original file it will be transfered  in the backups folder with a date at the end of its name. 
+
+Settings for student_file_creator.py are give inside the script.Typical values are the following:
+
+students_number = 99
+male_proportion = 0.4
+special_needs_proportion = 0.2
+with_id_proportion = 0.25
+
+old_chools =['OSC1', 'OSC2', 'OSC3']
+grades = [5, 4, 3, 2, 1]
+
+----------------------- 
+
+The program classrooms_group_analyzer.py is the main program of the system.
+We have the following characteristics
+
+    iterations = 2000
+    file_path = 'new_students.xlsx'
+    sheet_name = 'Students'
+    output_file_path = 'new_students_output.xlsx'
+
+    classrooms = 4
+
+#characteristics = 4  and we want to see how to change them
+
+
+
+189    print("Minimum Solution Cost", previous_solution_cost, "was found at iteration", min_iteration, "out of", iterations, "iterations")
+
+
+analyze_groups shows the males, females etc of the school
+create_classrooms: initialize them
+place_group_in_classroom:  increase the sizes and append the group in classroom_content
+placement_of_groups_in_classrooms: for each group checks to find the more hungry classroom and put the group there.
+optimize_classroom_placement: it takes a given number of iterations and finds the minimum cost of each placement of groups in classrooms.
+
+
+
+I have a student_file_reader that reads an excel and creates student object in python with yield.  The sudents are listed in order to keep it in a value. 

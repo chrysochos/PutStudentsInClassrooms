@@ -1,15 +1,19 @@
-from main1 import Main1
-from student import Student
-from student_file_reader import StudentFileReader
 import numpy as np
-
-
 class Group():
-    def __init__(self):
+    def __init__(self, students):
         self.group_id = None
         self.group =[]
         self.classroom = None
+        self.students = students
 
+    def find_student_by_id(self,students, student_id):
+
+        for student in students:
+            if student.student_id == student_id:
+                return student
+        print("ERROR: Student not found")
+        return None
+        
     def add_group(self, group_id,group, students):
         self.group_id = group_id
         self.group = group
@@ -18,7 +22,7 @@ class Group():
         self.gsn =0
         self.ggrade =0
         for stud in group:
-            student = Main1.find_student_by_id(students, stud)
+            student = self.find_student_by_id(students, stud)
             self.gm += 1 if student.gender in ('M', 'm') else 0
             self.gf += 1 if student.gender in ('F', 'f') else 0
             value = np.where(np.isnan(student.special_needs), 0, student.special_needs)

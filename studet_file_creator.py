@@ -4,6 +4,9 @@
 
 import random
 import openpyxl
+import os
+import shutil
+import datetime
 
 # generate a list of students
 def generate_students(filename='new_students.xlsx', students_number=99, male_proportion=0.5, special_needs_proportion=0.2, with_id_proportion=0.3):
@@ -60,7 +63,38 @@ def generate_students(filename='new_students.xlsx', students_number=99, male_pro
     wb.save(filename)
     return students_list 
 
+
+def get_backup_file_name(file_name):
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name_without_ext, ext = os.path.splitext(file_name)
+    return f"{file_name_without_ext}_{timestamp}{ext}"
+
+def create_backup_file(file_path):
+    file_dir, file_name = os.path.split(file_path)
+    backup_dir = os.path.join(file_dir, "backups")
+
+    # Δημιουργία φακέλου backups αν δεν υπάρχει
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+
+    # Συνάρτηση για τη δημιουργία ονόματος αρχείου με την τρέχουσα ημερομηνία
+    def get_backup_file_name():
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name_without_ext, ext = os.path.splitext(file_name)
+        return f"{file_name_without_ext}_{timestamp}{ext}"
+
+
+    # Δημιουργία και μετακίνηση του αντιγράφου ασφαλείας
+    backup_file_name = get_backup_file_name()
+    backup_file_path = os.path.join(backup_dir, backup_file_name)
+    shutil.copy2(file_path, backup_file_path)
+    print(f"Δημιουργήθηκε αντίγραφο ασφαλείας: {backup_file_path}")
+
+
+
 filename = 'new_students.xlsx'
+if os.path.exists(filename):
+    create_backup_file(filename)
 students_number = 99
 with_id_proportion = 0.25
 male_proportion = 0.4
