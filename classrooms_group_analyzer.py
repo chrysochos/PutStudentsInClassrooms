@@ -27,6 +27,7 @@ class ClassroomsGroupAnalyzer:
         self.classrooms_list = []
         self.classrooms_content = []
         self.previous_solution_cost = 1000000000
+        self.coef = 0.85
 
     def analyze_groups(self,groups_list):
         """
@@ -75,7 +76,7 @@ class ClassroomsGroupAnalyzer:
                 add_females = self.classrooms_list[j][2] + self.groups_list[i].gf
                 add_specialneeds = self.classrooms_list[j][3] + self.groups_list[i].gsn
                 add_ggrades = self.classrooms_list[j][4] + self.groups_list[i].ggrade
-                coef = 0.85
+                coef = self.coef
                 coef1 = random.uniform(coef, 1)
                 coef2 = random.uniform(coef, 1)
                 coef3 = random.uniform(coef, 1)
@@ -146,6 +147,7 @@ def main():
     starting_sheet_name = 'Starting Students'
     sheet_name = 'Students'
     classrooms = 4
+    coef = 0.85
     Clustering(file_path, starting_sheet_name,sheet_name)
     student_generator = StudentFileReader(file_path, sheet_name=sheet_name)
     students = list(student_generator.generate_students())
@@ -157,6 +159,7 @@ def main():
 
 
     classrooms_group_analyzer = ClassroomsGroupAnalyzer(file_path, groups_list,students,classrooms)
+    classrooms_group_analyzer.coef = coef
     classrooms_group_analyzer.analyze_groups(groups_list)
     classrooms_group_analyzer.create_classrooms()
     classrooms_group_analyzer.optimize_classroom_placement(iterations=iterations)

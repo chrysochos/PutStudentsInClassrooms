@@ -94,12 +94,12 @@ def create_backup_file(file_path):
 
 filename = 'new_students.xlsx'
 sheet_name = 'Starting Students'
-if os.path.exists(filename):
-    create_backup_file(filename)
 students_number = 99
 with_id_proportion = 0.25
 male_proportion = 0.4
 special_needs_proportion = 0.2
+if os.path.exists(filename):
+    create_backup_file(filename)
 students_list = generate_students(filename, students_number, male_proportion, special_needs_proportion, with_id_proportion)
 #print(students_list)
 
