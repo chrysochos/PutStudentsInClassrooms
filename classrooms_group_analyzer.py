@@ -3,7 +3,7 @@ import numpy as np
 from student_file_reader import StudentFileReader
 from group_analyzer import GroupAnalyzer
 from save_to_excel import SaveToExcel
-
+from clustering import Clustering
 
 class ClassroomsGroupAnalyzer:
     def __init__(self, file_path, groups_list,students,classrooms):
@@ -140,8 +140,10 @@ def main():
     iterations = 2000
     file_path = 'new_students.xlsx'
     output_sheet_name = 'Results'
+    starting_sheet_name = 'Starting Students'
     sheet_name = 'Students'
     classrooms = 4
+    Clustering(file_path, starting_sheet_name,sheet_name)
     student_generator = StudentFileReader(file_path, sheet_name=sheet_name)
     students = list(student_generator.generate_students())
     group_analyzer = GroupAnalyzer(students,file_path)
@@ -177,7 +179,7 @@ def main():
         # print(classroom, classr[classroom])
         print(classroom, classr_m, classr_f, classr_s, round(classr_g,2))
 
-    # print("The results are saved in the file", output_file_path)
+    print("The results are saved in the file", file_path ,"in the sheet", output_sheet_name)
     pass
   
    

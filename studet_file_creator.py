@@ -58,7 +58,7 @@ def generate_students(filename='new_students.xlsx', students_number=99, male_pro
         students_list.append(i)
                     
     #print(wb.sheetnames)
-    wb['Sheet'].title = 'Students'
+    wb['Sheet'].title = sheet_name
     # Save the workbook as an excel file
     wb.save(filename)
     return students_list 
@@ -93,6 +93,7 @@ def create_backup_file(file_path):
 
 
 filename = 'new_students.xlsx'
+sheet_name = 'Starting Students'
 if os.path.exists(filename):
     create_backup_file(filename)
 students_number = 99
