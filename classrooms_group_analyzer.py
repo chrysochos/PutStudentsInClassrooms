@@ -6,7 +6,7 @@ from save_to_excel import SaveToExcel
 from clustering import Clustering
 
 class ClassroomsGroupAnalyzer:
-    def __init__(self, file_path, groups_list,students,classrooms):
+    def __init__(self, file_path, groups_list,students,classrooms,max_old_classrooms, max_old_schools):
         """_summary_line
         Args:
             file_path (str): path to the file
@@ -16,6 +16,8 @@ class ClassroomsGroupAnalyzer:
         """ 
         self.students = students
         self.file_path = file_path
+        self.max_old_classrooms = max_old_classrooms
+        self.max_old_schools = max_old_schools
         # self.student_generator = StudentFileReader(self.file_path)
         # self.students = list(self.student_generator.generate_students())
         self.groups_list = groups_list
@@ -57,7 +59,7 @@ class ClassroomsGroupAnalyzer:
     def create_classrooms(self):
         self.classrooms_list.clear()
         for classroom in range(self.classrooms):
-            self.classrooms_list.append([classroom, 0, 0, 0, 0])
+            self.classrooms_list.append([classroom, 0, 0, 0, 0,[0]*(self.max_old_schools+1),[0]*(self.max_old_classrooms+1)])
         return self.classrooms_list
 
     def place_group_in_classroom(self, group, classroom):
@@ -65,6 +67,23 @@ class ClassroomsGroupAnalyzer:
         self.classrooms_list[classroom][2] += group.gf
         self.classrooms_list[classroom][3] += group.gsn
         self.classrooms_list[classroom][4] += group.ggrade
+        # I want a dictionary for each classroom to keep variablle number of keys of OldSchools to keep counters of such occurences
+        # self.classrooms_list[classroom][5] = []
+        # I want a dictionary for each classroom to keep variablle number of keys of OldSchoolsClassrooms to keep counters of such occurences
+        # self.classrooms_list[classroom][6] = []
+        for student0 in group.group:
+            # find student with student.id in self.students
+            for student in self.students:
+                if student.student_id == student0:
+
+                    self.classrooms_list[classroom][5][student.old_school] += 1
+
+                    self.classrooms_list[classroom][6][student.old_school_classroom] += 1
+
+                    break
+
+
+
         self.classrooms_content.append([self.classrooms_list[classroom][0], group])
         return True
 
@@ -91,19 +110,41 @@ class ClassroomsGroupAnalyzer:
             else:
                 print("The group", i, "was not placed in any classroom")
 
+    def flatten_list(self,nested_list):
+        flattened = []
+        for item in nested_list:
+            if isinstance(item, list):
+                flattened.extend(self.flatten_list(item))
+            else:
+                flattened.append(item)
+        return flattened
+    
     def optimize_classroom_placement(self, iterations):
         for j in range(iterations):
             self.classrooms_content.clear()
             self.create_classrooms()
 
+
             self.placement_of_groups_in_classrooms()
 
-            np_array = np.array([sublist[1:] for sublist in self.classrooms_list])
-            # variances = np.var(np_array, axis=0)
+            my_list = []
+            # I must flatten but keep the list of each classrooms
+           
+            for classroom in self.classrooms_list:
+                homogeneous_list = self.flatten_list(classroom)
+                # homogeneous_list = [value for value in self.flatten_list(classroom)[1:] if value != 0]
+                my_list.append(homogeneous_list[1:])
+                pass
+            np_array = np.array(my_list)
+            # we add the first 2 columns with males and females and we put the sum in the first column
+            sum_column = np_array[:, 0] + np_array[:, 1]
+            np_array = np.insert(np_array, 0, sum_column, axis=1)
+
+            # There is no any need to see only the first columns
+            # np_array = np.array(my_list)[:, :8]
             mean = np.mean(np_array, axis=0)
-            coefficient_of_variation = np.std(np_array, axis=0) / mean
-            # solution_cost = variances[1] / (self.males +0.000000001) + variances[2] / (self.females +0.000000001) + variances[3] / (self.special_needs +0.000000001) + variances[4] / (self.sum_of_grades +0.000000001)
-            # solution_cost = variances[1] + variances[2] + variances[3] + variances[4]
+            # We give more weight to the bigger values like number of students, males, females, grades, old schools and old classrooms.
+            coefficient_of_variation = np.std(np_array, axis=0) * mean 
             solution_cost = np.sum(coefficient_of_variation)
 
             if solution_cost < self.previous_solution_cost:
@@ -111,6 +152,7 @@ class ClassroomsGroupAnalyzer:
                 self.min_iteration = j
                 self.best_classrooms_content = self.classrooms_content.copy()
                 self.best_classrooms_list = self.classrooms_list.copy()
+                self.best_np_array = np_array.copy()
 
     def find_groups_by_classroom(self,iterations):
         print("Minimum Solution Cost", self.previous_solution_cost, "was found at iteration", self.min_iteration, "out of", iterations)
@@ -141,14 +183,15 @@ def main():
     and give the results of the program to screen and excel file.
     """    
     # Usage example
-    iterations = 2000
+    iterations = 10000
     file_path = 'new_students.xlsx'
     output_sheet_name = 'Results'
     starting_sheet_name = 'Starting Students'
     sheet_name = 'Students'
     classrooms = 4
     coef = 0.85
-    Clustering(file_path, starting_sheet_name,sheet_name)
+    clustering = Clustering(file_path, starting_sheet_name,sheet_name)
+    max_old_classrooms, max_old_schools = clustering.run()
     student_generator = StudentFileReader(file_path, sheet_name=sheet_name)
     students = list(student_generator.generate_students())
     group_analyzer = GroupAnalyzer(students,file_path)
@@ -156,12 +199,9 @@ def main():
     groups_list = group_analyzer.find_groups()
     # for group in groups_list:
     #     group.print_group() 
-
-
-    classrooms_group_analyzer = ClassroomsGroupAnalyzer(file_path, groups_list,students,classrooms)
+    classrooms_group_analyzer = ClassroomsGroupAnalyzer(file_path, groups_list,students,classrooms, max_old_classrooms, max_old_schools)
     classrooms_group_analyzer.coef = coef
     classrooms_group_analyzer.analyze_groups(groups_list)
-    classrooms_group_analyzer.create_classrooms()
     classrooms_group_analyzer.optimize_classroom_placement(iterations=iterations)
     classrooms_group_analyzer.find_groups_by_classroom(iterations=iterations)
  
@@ -188,7 +228,16 @@ def main():
     print("The results are saved in the file", file_path ,"in the sheet", output_sheet_name)
     pass
   
-   
+    # Assuming classrooms_group_analyzer.best_np_array is the array
+    rows, cols = classrooms_group_analyzer.best_np_array.shape
+
+    # Print the array in rows
+    for row in range(rows): 
+        for col in range(cols):
+            print(str(int(classrooms_group_analyzer.best_np_array[row][col])).rjust(3), end=" ")
+        print()
+    pass
+
 
 
 # call main

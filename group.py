@@ -4,7 +4,7 @@ class Group():
         self.group_id = None
         self.group =[]
         self.classroom = None
-        self.students = students
+
 
     def find_student_by_id(self,students, student_id):
 
@@ -21,6 +21,8 @@ class Group():
         self.gf =0
         self.gsn =0
         self.ggrade =0
+        self.group_old_schools = []
+        self.group_old_school_classrooms = []
         for stud in group:
             student = self.find_student_by_id(students, stud)
             self.gm += 1 if student.gender in ('M', 'm') else 0
@@ -29,6 +31,8 @@ class Group():
             self.gsn += int(value)  
             self.ggrade += student.mean_value
             student.assign_group(self)
+            self.group_old_school_classrooms.append(student.old_school_classroom)
+            self.group_old_schools.append(student.old_school)
         self.ggrade = self.ggrade / len(group)
         self.ggrade = self.ggrade / 10
         return None

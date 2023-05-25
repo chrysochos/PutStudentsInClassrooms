@@ -28,7 +28,9 @@ class StudentFileReader():
                 'g5': row['G5'],
                 'mean_value': row['MeanValue'],
                 'special_needs': row['SpecialNeeds'],
-                'notes': row['Notes']
+                'notes': row['Notes'],
+                'old_school_classroom': row['ClassClusterFuzzy'],
+                'old_school':  row['SchoolClusterFuzzy']
             }
             yield Student(student_id, characteristics)
 

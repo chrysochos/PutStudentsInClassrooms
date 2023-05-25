@@ -37,7 +37,6 @@ class GroupAnalyzer:
                         visited.add(vertex)
                         island.add(vertex)
                         stack.extend(graph[vertex])
-                # groups.append(island)
                 # create a group object
                 group = Group(self.students)
                 group.add_group(i, island,students=self.students)
@@ -47,7 +46,6 @@ class GroupAnalyzer:
                             student.assign_group(group)
                 groups.append(group)
                 i += 1
-
         return groups
 
     def find_student_by_id(self, student_id):

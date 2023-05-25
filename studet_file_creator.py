@@ -34,7 +34,6 @@ def generate_students(filename='new_students.xlsx', students_number=99, male_pro
         first_name = random.choice(greek_first_names)
         middle_name = random.choice(greek_first_names)
         family_name = random.choice(greek_surnames)
-        #gender = random.choice(['F', 'M', 'F', 'F', 'F', 'M', 'M', 'M', 'M', 'M'])
         rr =random.random()
         if rr < male_proportion:
             gender = 'M'

@@ -18,6 +18,8 @@ class Student():
         self.mean_value = characteristics['mean_value']
         self.special_needs = characteristics['special_needs']
         self.notes = characteristics['notes']
+        self.old_school_classroom = characteristics['old_school_classroom']
+        self.old_school = characteristics['old_school']
     
     def print_score(self):
         print('%s:%s' % (self.name, self.score))    

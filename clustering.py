@@ -11,6 +11,7 @@ class Clustering:
         self.output_sheet_name = output_sheet_name
         self.starting_sheet_name = starting_sheet_name
 
+    def run(self):
         # read in the data
         df = pd.read_excel(self.input_file_path, sheet_name=self.starting_sheet_name)
 
@@ -56,7 +57,8 @@ class Clustering:
         # add fuzzy labels to dataframe
         df['ClassClusterFuzzy'] = class_labels_fuzzy
         df['SchoolClusterFuzzy'] = school_labels_fuzzy
-
+        return max(class_labels_fuzzy), max(school_labels_fuzzy)
+        
 
 
         # save output to excel
