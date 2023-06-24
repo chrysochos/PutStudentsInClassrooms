@@ -33,8 +33,6 @@ class Group():
             student.assign_group(self)
             self.group_old_school_classrooms.append(student.old_school_classroom)
             self.group_old_schools.append(student.old_school)
-        self.ggrade = self.ggrade / len(group)
-        self.ggrade = self.ggrade / 10
         return None
  
     def get_group_values(self):

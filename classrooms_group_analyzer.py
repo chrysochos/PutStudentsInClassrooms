@@ -54,6 +54,7 @@ class ClassroomsGroupAnalyzer:
         print("Number of females:", females)
         print("Number of special_needs:", special_needs)
         print("Sum of grades:", round(sum_of_grades,2))
+        print("Total grade:", round(sum_of_grades/(males+females),2))
         print()
 
     def create_classrooms(self):
@@ -88,7 +89,17 @@ class ClassroomsGroupAnalyzer:
         return True
 
     def placement_of_groups_in_classrooms(self):
+
         for i in range(len(self.groups_list)):
+            try:
+                if self.groups_list[i].preput == True:
+                    if self.place_group_in_classroom(self.groups_list[i], int(self.groups_list[i].preput_classroom)-1):
+                        pass
+                    else:
+                        print("The group", i, "was not placed in any classroom")
+                    continue
+            except:
+                pass
             needs = []
             for j in range(len(self.classrooms_list)):
                 add_males = self.classrooms_list[j][1] + self.groups_list[i].gm
@@ -119,11 +130,13 @@ class ClassroomsGroupAnalyzer:
                 flattened.append(item)
         return flattened
     
+
     def optimize_classroom_placement(self, iterations):
         for j in range(iterations):
             self.classrooms_content.clear()
             self.create_classrooms()
 
+            
 
             self.placement_of_groups_in_classrooms()
 
@@ -139,7 +152,8 @@ class ClassroomsGroupAnalyzer:
             # we add the first 2 columns with males and females and we put the sum in the first column
             sum_column = np_array[:, 0] + np_array[:, 1]
             np_array = np.insert(np_array, 0, sum_column, axis=1)
-
+            # for the cost we see the ratio of the grades to the number of students
+            np_array[:,4] = np_array[:,4]/np_array[:,0]
             # There is no any need to see only the first columns
             # np_array = np.array(my_list)[:, :8]
             mean = np.mean(np_array, axis=0)
@@ -153,6 +167,9 @@ class ClassroomsGroupAnalyzer:
                 self.best_classrooms_content = self.classrooms_content.copy()
                 self.best_classrooms_list = self.classrooms_list.copy()
                 self.best_np_array = np_array.copy()
+            # print(j, solution_cost)
+            # if solution_cost < 115:
+            #     break
 
     def find_groups_by_classroom(self,iterations):
         print("Minimum Solution Cost", self.previous_solution_cost, "was found at iteration", self.min_iteration, "out of", iterations)
@@ -174,8 +191,6 @@ class ClassroomsGroupAnalyzer:
         return None
     
 
-
-
 def main():
     """
     This is the  main entry point of the program. 
@@ -183,12 +198,12 @@ def main():
     and give the results of the program to screen and excel file.
     """    
     # Usage example
-    iterations = 10000
+    iterations = 300000
     file_path = 'new_students.xlsx'
     output_sheet_name = 'Results'
     starting_sheet_name = 'Starting Students'
     sheet_name = 'Students'
-    classrooms = 4
+    classrooms = 7
     coef = 0.85
     clustering = Clustering(file_path, starting_sheet_name,sheet_name)
     max_old_classrooms, max_old_schools = clustering.run()
@@ -197,17 +212,19 @@ def main():
     group_analyzer = GroupAnalyzer(students,file_path)
     group_analyzer.process_students_to_couples()
     groups_list = group_analyzer.find_groups()
+
     # for group in groups_list:
     #     group.print_group() 
     classrooms_group_analyzer = ClassroomsGroupAnalyzer(file_path, groups_list,students,classrooms, max_old_classrooms, max_old_schools)
     classrooms_group_analyzer.coef = coef
     classrooms_group_analyzer.analyze_groups(groups_list)
+    # the preput groups are going directly into preput classrooms
     classrooms_group_analyzer.optimize_classroom_placement(iterations=iterations)
     classrooms_group_analyzer.find_groups_by_classroom(iterations=iterations)
  
     save_to_excel = SaveToExcel(file_path, output_sheet_name, students)
     save_to_excel.save_to_excel()
-
+    print("Τάξη","Αγόρ.","Κορ","Sp.","Βαθμός")
     classr = {}
     for classroom in range(classrooms):
         classr[classroom] = []
@@ -223,7 +240,9 @@ def main():
                 classr_s +=group.gsn
                 classr_g +=group.ggrade
         # print(classroom, classr[classroom])
-        print(classroom, classr_m, classr_f, classr_s, round(classr_g,2))
+        a =classroom+1
+        bb = round(classr_g/(classr_m+classr_f),2)
+        print(f"{a:4}", f"{classr_m:4}", f"{classr_f:4}", f"{classr_s:4}", f"{bb:4}")  
 
     print("The results are saved in the file", file_path ,"in the sheet", output_sheet_name)
     pass
@@ -232,6 +251,13 @@ def main():
     rows, cols = classrooms_group_analyzer.best_np_array.shape
 
     # Print the array in rows
+    print("The best solution is the following: ")
+    print("Μαθ.","Αγ.","Κορ.","Sp","Βαθ.", end=" ")
+    for i in range(0,max_old_schools+1):
+        print(f"Σ{i+1}".rjust(3), end=" ")
+    for i in range(max_old_classrooms+1):
+        print(f"T{i+1}".rjust(3), end=" ")
+    print()
     for row in range(rows): 
         for col in range(cols):
             print(str(int(classrooms_group_analyzer.best_np_array[row][col])).rjust(3), end=" ")

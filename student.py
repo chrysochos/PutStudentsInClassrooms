@@ -20,6 +20,8 @@ class Student():
         self.notes = characteristics['notes']
         self.old_school_classroom = characteristics['old_school_classroom']
         self.old_school = characteristics['old_school']
+        self.preput = characteristics['preput']
+        self.preput_classroom = characteristics['preput_classroom']
     
     def print_score(self):
         print('%s:%s' % (self.name, self.score))    

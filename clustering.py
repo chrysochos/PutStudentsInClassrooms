@@ -51,18 +51,17 @@ class Clustering:
             return cluster_labels
 
         # assign fuzzy class and school labels
-        class_labels_fuzzy = get_cluster_labels_fuzzy(df['OldSchoolClassFull'], 90)
-        school_labels_fuzzy = get_cluster_labels_fuzzy(df['OldSchool'], 90)
+        class_labels_fuzzy = get_cluster_labels_fuzzy(df['OldSchoolClassFull'], 95)
+        school_labels_fuzzy = get_cluster_labels_fuzzy(df['OldSchool'], 95)
 
         # add fuzzy labels to dataframe
         df['ClassClusterFuzzy'] = class_labels_fuzzy
         df['SchoolClusterFuzzy'] = school_labels_fuzzy
-        return max(class_labels_fuzzy), max(school_labels_fuzzy)
+
         
-
-
         # save output to excel
         # Write the new sheet to the Excel file
         # with pd.ExcelWriter(self.input_file_path, engine='openpyxl', mode='a') as writer:
         #     df.to_excel(writer, sheet_name=self.output_sheet_name, index=False)
         write_sheet_to_excel(df, sheet_name= self.output_sheet_name, input_file_path= self.input_file_path)
+        return max(class_labels_fuzzy), max(school_labels_fuzzy)

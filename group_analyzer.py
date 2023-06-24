@@ -44,6 +44,9 @@ class GroupAnalyzer:
                     for student in self.students:
                         if student.student_id == student1:
                             student.assign_group(group)
+                            if student.preput == 1:
+                                group.preput =1 
+                                group.preput_classroom = student.preput_classroom
                 groups.append(group)
                 i += 1
         return groups

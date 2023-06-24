@@ -11,7 +11,7 @@ class SaveToExcel:
         df = pd.read_excel(self.input_file_path)
         for student in self.students:
             row_index = df[df['ID'] == student.student_id].index
-            df.loc[row_index, 'Classroom'] = student.group.classroom
+            df.loc[row_index, 'Classroom'] = student.group.classroom + 1
             df.loc[row_index, 'GroupID'] = student.group.group_id
             df.loc[row_index, 'GroupValues'] = str(student.group.get_group_values())
             df.loc[row_index, 'Group'] = str(student.group.group)

@@ -29,14 +29,17 @@ class StudentFileReader():
                 'mean_value': row['MeanValue'],
                 'special_needs': row['SpecialNeeds'],
                 'notes': row['Notes'],
+                'preput': row['Preput'],
+                'preput_classroom': row['PreputClassroom'],
                 'old_school_classroom': row['ClassClusterFuzzy'],
-                'old_school':  row['SchoolClusterFuzzy']
+                'old_school':  row['SchoolClusterFuzzy'],
+
             }
             yield Student(student_id, characteristics)
 
 def main():
     file_path = 'new_students.xlsx'  # Path to the Excel file
-    student_generator = StudentFileReader(file_path)
+    student_generator = StudentFileReader(file_path, "Students")
     students = list(student_generator.generate_students())
     return students
 
@@ -47,5 +50,5 @@ if __name__ == '__main__':
     print(f"Number of students: {len(students)}")
     for student in students:
         # Process each student object
-        print(f"Student ID: {student.student_id}, Characteristics: {student.first_name}")
+        print(f"Student ID: {student.student_id}, Characteristics: {student.first_name}  {student.preput} ")
 
