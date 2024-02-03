@@ -1,4 +1,6 @@
 # PUT THE STUDENTS IN CLASSROOMS
+This is a method, with an example, of how to evenly distribute items with different values of the same characteristics.
+
 We start with empty classrooms. We put students in classrooms based on their space. Whenever we put a student we add to the corresponding dimensions of several characteristics, like grades, gender, previous school, and class etc. We may have requests to put some students in the same classroom as some other students. So, we start from these groups first. Our intention is to put the students evenly distributed based on their characteristics in all the classrooms.
 
 We try to put the students to the emptiest classroom, but we give a randomness and we try many times. We calculate the results (cost) of each run and then we select the optimum run.
